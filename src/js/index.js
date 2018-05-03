@@ -16,7 +16,6 @@ function app() {
         var networkId = results[1];
         var accounts = results[2];
         userAccount = accounts[0];
-        console.log(contractData);
         console.log(networkId);
         console.log(accounts);
         console.log(userAccount);
