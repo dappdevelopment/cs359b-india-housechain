@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../css/index.css';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class App extends React.Component {
+import '../css/index.css';
+import Login from './login.js';
+
+
+class Home extends React.Component {
   constructor (props) {
     super (props);
 
@@ -18,6 +22,8 @@ class App extends React.Component {
     this.querySecret = this.querySecret.bind (this);
     this.refreshBalance = this.refreshBalance.bind (this);
     this.setData = this.setData.bind (this);
+
+    this.login = this.login.bind(this);
 
     this.data = {};
 
@@ -79,6 +85,11 @@ class App extends React.Component {
     console.log(this.networkId);
   }
 
+  login(e) {
+    e.preventDefault();
+    this.props.history.push('/about');
+  }
+
   render () {
     return (
       <div className='App'>
@@ -101,15 +112,27 @@ class App extends React.Component {
         <button onClick={ this.querySecret }> Start Experiment on Smart Contract </button>
         <br />
         <br />
+        <button>
+          <Link to="/login">Login</Link>
+        </button>
       </div>
-      
     )
   }
 }
 
 
+const Root = () => (
+  <Router>
+    <div>
+      <Route exact path="/" component={Home} />
+      <Route path="/login" component={Login} />
+    </div>
+  </Router>
+);
+
+
 ReactDOM.render(
-  <App />,
+  <Root />,
   document.getElementById('root')
 );
 

@@ -49,9 +49,6 @@ module.exports = {
          query: {
             presets: ['es2015', 'react', 'stage-2']
          }
-      }, {
-         test: /\.json$/, // To load the json files
-         loader: 'json-loader'
       }]
    },
    optimization: {
