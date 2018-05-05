@@ -8,17 +8,17 @@ contract HouseChain {
   address public owner;
   event BalanceChanged(address indexed _address, uint256 _balance);
 
-  function HouseChain() public {
+  constructor() public {
     balances[msg.sender] = totalSupply;        // Give the creator initially all the tokens
     owner = msg.sender;
   }
 
   function add_address(string addr, string person) public returns (string name) {
     house_addresses[addr] = person;
-    name = person;
+    name = house_addresses[addr];
   }
 
-  function verify_address(string addr) public returns (string name) {
+  function verify_address(string addr) public view returns (string name) {
     name = house_addresses[addr];
   }
 
