@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import '../css/index.css';
 import Login from './login.js';
+import House from './house.js'
 
 
 class Home extends React.Component {
@@ -20,10 +21,13 @@ class Home extends React.Component {
     const accountsPromise = web3.eth.getAccounts(); // resolves on an array of accounts
   
     this.querySecret = this.querySecret.bind (this);
+    this.addAddress = this.addAddress.bind (this);
+    this.verifyAddress = this.verifyAddress.bind (this);
     this.refreshBalance = this.refreshBalance.bind (this);
     this.setData = this.setData.bind (this);
 
     this.login = this.login.bind(this);
+    this.house = this.house.bind(this);
 
     this.data = {};
 
@@ -68,12 +72,15 @@ class Home extends React.Component {
 
   refreshBalance() { // Returns web3's PromiEvent
     // Calling the contract (try with/without declaring view)
+    console.log("The user account is "+this.data.userAccount)
     console.log(this.data.contract)
     this.data.contract.methods.balances(this.data.userAccount).call().then(function (balance) {
       $('#display').text(balance + " CDT");
       $("#loader").hide();
     });
   }
+
+
 
   querySecret () {
     // const { getSecret } = this.networkId;
@@ -85,7 +92,28 @@ class Home extends React.Component {
     console.log(this.networkId);
   }
 
+  addAddress (addr) {
+    console.log("Adding an address of "+addr+" for userAccount "+this.data.userAccount)
+    this.data.contract.methods.add_address(this.data.userAccount, addr).call().then(function (name) {
+      console.log("Name is "+name);
+    });
+
+  }
+
+  verifyAddress (addr) {
+    console.log("Reading an address of "+addr+" for userAccount "+this.data.userAccount)
+    this.data.contract.methods.verify_address(addr).call().then(function (owner_name) {
+      console.log("Owner name is "+owner_name);
+    });
+
+  }
+
   login(e) {
+    e.preventDefault();
+    this.props.history.push('/about');
+  }
+
+  house(e) {
     e.preventDefault();
     this.props.history.push('/about');
   }
@@ -105,6 +133,15 @@ class Home extends React.Component {
           <label for="mint-amount" class="col-lg-2 control-label">Mint Amount</label>
           <input id="mint-amount" type="text"></input>     
           <button id="mint-button">Mint</button>
+
+          <label for="add-address" class="col-lg-2 control-label">Add Address</label>
+          <input ref="enterAddressTextBox" type="text"></input>     
+          <button onClick= { (e) => this.addAddress(this.refs.enterAddressTextBox.value) } >Add Address</button>
+
+          <label for="verify-address" class="col-lg-2 control-label">Verify Address</label>
+          <input ref="verifyAddressTextBox" type="text"></input>     
+          <button onClick= { (e) => this.verifyAddress(this.refs.verifyAddressTextBox.value) } >Verify Address</button>
+
         </header>
 
         <br />
@@ -112,8 +149,13 @@ class Home extends React.Component {
         <button onClick={ this.querySecret }> Start Experiment on Smart Contract </button>
         <br />
         <br />
+
+
         <button>
           <Link to="/login">Login</Link>
+        </button>
+        <button>
+          <Link to="/house">House</Link>
         </button>
       </div>
     )
@@ -126,6 +168,7 @@ const Root = () => (
     <div>
       <Route exact path="/" component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/house" component={House} />
     </div>
   </Router>
 );

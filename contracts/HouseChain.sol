@@ -2,13 +2,24 @@ pragma solidity ^0.4.21;
 
 contract HouseChain {
   mapping (address => uint256) public balances;
+  mapping (address => bytes32) public house_addresses;
+
   uint256 totalSupply = 21000000;
   address public owner;
   event BalanceChanged(address indexed _address, uint256 _balance);
 
-  function HouseChain() public {
+  constructor() public {
     balances[msg.sender] = totalSupply;        // Give the creator initially all the tokens
     owner = msg.sender;
+  }
+
+  function add_address(address addr, bytes32 person) public returns (bytes32 name) {
+    house_addresses[addr] = person;
+    name = house_addresses[addr];
+  }
+
+  function verify_address(address addr) public view returns (bytes32 name) {
+    name = house_addresses[addr];
   }
 
   function transfer(address _to, uint256 _value) public returns (bool success) {
