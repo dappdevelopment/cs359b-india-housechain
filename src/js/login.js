@@ -9,6 +9,8 @@ class Login extends Component {
   constructor (props) {
     super(props);
     this.connectUport = this.connectUport.bind(this);
+    this.housePage = this.housePage.bind(this);
+    console.log(props);
   }
 
   connectUport () {
@@ -21,15 +23,25 @@ class Login extends Component {
     // });
     uport.requestCredentials().then((credentials) => {
       console.log(credentials);
+      this.credentials = credentials;
+      this.housePage();
+    });
+  }
+
+
+  housePage() {
+    this.props.history.push({
+      pathname: '/house',
+      state: this.props.location.state
     });
   }
 
   render () {
     return (
       <div>
-        <h4>Build a Better dApp</h4>
+        <h1>Login to India HouseChain</h1>
 
-        <h1>Identity and transaction infrastructure for Ethereum</h1>
+        <h4>Scan the QR Code with your uPort mobile app</h4>
         <button
           onClick={this.connectUport}>
           Connect with uPort
