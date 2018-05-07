@@ -94,7 +94,8 @@ class Home extends React.Component {
 
   addAddress (addr) {
     console.log("Adding an address of "+addr+" for userAccount "+this.data.userAccount)
-    this.data.contract.methods.add_address(addr, String(this.data.userAccount)).call().then(function (name) {
+    this.data.contract.methods.add_address(addr, String(this.data.userAccount))
+      .send({from: this.data.userAccount}).then(function (name) {
       console.log("Name is "+name);
     });
 
