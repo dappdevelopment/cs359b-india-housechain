@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
+import * as AppActions from './actions.js'
 
 class House extends Component {
 
   constructor (props) {
     super(props);
+    console.log(this.props);
     this.addAddress = this.addAddress.bind(this);
     this.verifyAddress = this.verifyAddress.bind(this);
-    this.state = this.props.location.state;
   }
 
   addAddress (addr) {
-    console.log("Adding an address of "+addr+" for userAccount "+this.state.userAccount)
-    this.data.contract.methods.add_address(this.state.userAccount, addr)
-    .send({from: this.state.userAccount})
+    console.log("Adding an address of "+addr+" for userAccount "+this.props.userAccount)
+    this.props.contract.methods.add_address(this.props.userAccount, addr)
+    .send({from: this.props.userAccount})
     .then(function (name) {
       console.log("Address is "+name);
     });
@@ -23,7 +23,7 @@ class House extends Component {
 
   verifyAddress (owner) {
     console.log("Reading an address for userAccount "+owner)
-    this.data.contract.methods.verify_address(owner).call().then(function (addr) {
+    this.props.contract.methods.verify_address(owner).call().then(function (addr) {
       console.log("Address is "+addr);
       $('#display').text("Address: " + addr);
     });
@@ -46,4 +46,17 @@ class House extends Component {
   }
 }
 
-export default House;
+const mapStateToProps = (state, props) => {
+  return {  
+    userAccount: state.App.userAccount,
+    contract: state.App.contract,
+    uport: state.App.uport
+
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return { actions: bindActionCreators(AppActions, dispatch) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(House)

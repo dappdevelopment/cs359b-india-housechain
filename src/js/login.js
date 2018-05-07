@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { uport } from '../utils/uportSetup'
 
+import { uport } from '../utils/uportSetup'
+import * as AppActions from './actions.js'
 
 class Login extends Component {
 
@@ -23,7 +24,7 @@ class Login extends Component {
     // });
     uport.requestCredentials().then((credentials) => {
       console.log(credentials);
-      this.credentials = credentials;
+      this.props.actions.connectUport(credentials)
       this.housePage();
     });
   }
@@ -51,4 +52,14 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state, props) => {
+  return {
+    uport: state.App.uport
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return { actions: bindActionCreators(AppActions, dispatch) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
