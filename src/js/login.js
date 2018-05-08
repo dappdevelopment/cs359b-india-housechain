@@ -54,7 +54,9 @@ class Login extends Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    uport: state.App.uport
+    uport: state.App.uport,
+        userAccount: state.App.userAccount,
+    contract: state.App.contract,
   }
 }
 

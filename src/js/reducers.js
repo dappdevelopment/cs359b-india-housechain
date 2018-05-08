@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux'
 
-
 let initialState = {}
 
 function App(state = initialState, payload) {
   switch (payload.type) {
+    // case 'persist/REHYDRATE':
+    //   return {
+    //     ...state,
+    //     persistedState: payload.payload
+    //   }
     case 'CONNECT_UPORT':
       return {
         ...state,

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as AppActions from './actions.js'
+import Contract from './contract.js'
 
 class House extends Component {
 
@@ -10,11 +11,14 @@ class House extends Component {
     console.log(this.props);
     this.addAddress = this.addAddress.bind(this);
     this.verifyAddress = this.verifyAddress.bind(this);
+    this.setContract = this.setContract.bind(this);
+
+    Contract().then(this.setContract).catch(console.error);
   }
 
   addAddress (addr) {
     console.log("Adding an address of "+addr+" for userAccount "+this.props.userAccount)
-    this.props.contract.methods.add_address(this.props.userAccount, addr)
+    this.contract.methods.add_address(this.props.userAccount, addr)
     .send({from: this.props.userAccount})
     .then(function (name) {
       console.log("Address is "+name);
@@ -23,10 +27,14 @@ class House extends Component {
 
   verifyAddress (owner) {
     console.log("Reading an address for userAccount "+owner)
-    this.props.contract.methods.verify_address(owner).call().then(function (addr) {
+    this.contract.methods.verify_address(owner).call().then(function (addr) {
       console.log("Address is "+addr);
       $('#display').text("Address: " + addr);
     });
+  }
+
+  setContract(contract) {
+    this.contract = contract;
   }
 
   render () {
@@ -49,7 +57,6 @@ class House extends Component {
 const mapStateToProps = (state, props) => {
   return {  
     userAccount: state.App.userAccount,
-    contract: state.App.contract,
     uport: state.App.uport
 
   }

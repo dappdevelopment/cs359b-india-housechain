@@ -55,7 +55,7 @@ class App extends React.Component {
 
   setData(data) {
     this.props.actions.getUserAccount(data.userAccount);
-    this.props.actions.getContract(data.contract);
+    // this.props.actions.getContract(data.contract);
     this.state = data;
   }
 
