@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as AppActions from './actions.js'
+import * as AppActions from './actions'
 
 class App extends React.Component {
   constructor (props) {
