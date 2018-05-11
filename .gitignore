@@ -1,3 +1,6 @@
+#build.js
+src/build.js
+
 # Logs
 logs
 *.log
