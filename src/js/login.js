@@ -32,7 +32,7 @@ class Login extends Component {
 
   housePage() {
     this.props.history.push({
-      pathname: '/house',
+      pathname: process.env.DAPP_URL + "/house",
       state: this.props.location.state
     });
   }

@@ -1,18 +1,25 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const dotenv = require('dotenv-webpack');
 
 module.exports = {
-    entry: "./src/js/index.js",
+  entry: "./src/js/index.js",
 
-    output: {
-        filename: "build.js",
-        path: __dirname + "/src",
-    },
+  output: {
+      filename: "build.js",
+      path: __dirname + "/src",
+  },
 
-    resolve: {
-        extensions: ['.js', '.tsx']
-    },
+  resolve: {
+      extensions: ['.js', '.tsx']
+  },
 
-   module: {
+  plugins: [
+    new dotenv({
+      path: './.env',
+    })
+  ],
+
+  module: {
       rules: [{
          test: /\.css$/, // To load the css in react
          use: ['style-loader', 'css-loader'],
@@ -25,8 +32,9 @@ module.exports = {
             presets: ['es2015', 'react', 'stage-2']
          }
       }]
-   },
-   optimization: {
+  },
+
+  optimization: {
       minimizer: [
          // we specify a custom UglifyJsPlugin here to get source maps in production
          new UglifyJsPlugin({

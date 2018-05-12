@@ -12,13 +12,12 @@ import Store from './store.js'
 import Login from './login.js'
 import House from './house.js'
 
-
 const Root = () => (
   <Router>
     <div>
-      <Route exact path="/" component={App} />
-      <Route path="/login" component={Login} />
-      <Route path="/house" component={House} />
+      <Route exact path={process.env.DAPP_URL + "/"} component={App} />
+      <Route path={process.env.DAPP_URL + "/login"} component={Login} />
+      <Route path={process.env.DAPP_URL + "/house"} component={House} />
     </div>
   </Router>
 );

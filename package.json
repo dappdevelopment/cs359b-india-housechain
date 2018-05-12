@@ -36,6 +36,8 @@
     "webpack-cli": "^2.1.2"
   },
   "dependencies": {
+    "dotenv-webpack": "^1.5.5",
+    "node-env-file": "^0.1.8",
     "react-dom": "^16.3.2",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",

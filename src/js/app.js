@@ -82,7 +82,7 @@ class App extends React.Component {
         </header>
         <br />
         <button>
-          <Link to="/login">Login</Link>
+          <Link to={process.env.DAPP_URL + "/login"}>Login</Link>
         </button>
       </div>
     )
