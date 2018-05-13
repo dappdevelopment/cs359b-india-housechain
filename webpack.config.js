@@ -49,7 +49,7 @@ module.exports = {
              ecma: 6,
              mangle: false,
              output: {
-               beautify: process.env.dev
+               beautify: process.env.DEV
              }
            },
            sourceMap: true,

@@ -24,7 +24,10 @@ class House extends Component {
     .send({from: this.props.userAccount})
     .then(function (name) {
       console.log("Address is "+name);
-      window.statusComponent.setStatus('success', "Address at " + addr + "was registered.");
+      window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
+    })
+    .catch(function () {
+      window.statusComponent.setStatus('danger', "Could not register your address. Check metamask.");
     });
   }
 
@@ -36,6 +39,9 @@ class House extends Component {
       console.log("Address is "+addr);
       window.statusComponent.setStatus('success', 'Address verified.');
       $('#display').text("Address: " + addr);
+    })
+    .catch(function () {
+      window.statusComponent.setStatus('danger', "Could not verify your address. Check metamask.");
     });
   }
 
