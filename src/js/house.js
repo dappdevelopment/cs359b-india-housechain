@@ -19,17 +19,22 @@ class House extends Component {
 
   addAddress (addr) {
     console.log("Adding an address of "+addr+" for userAccount "+this.props.userAccount)
+    window.statusComponent.setStatus('warning', 'Adding address...');
     this.contract.methods.add_address(this.props.userAccount, addr)
     .send({from: this.props.userAccount})
     .then(function (name) {
       console.log("Address is "+name);
+      window.statusComponent.setStatus('success', "Address at " + addr + "was registered.");
     });
   }
 
   verifyAddress (owner) {
     console.log("Reading an address for userAccount "+owner)
+    console.log(window.status)
+    window.statusComponent.setStatus('warning', 'Verifying address...');
     this.contract.methods.verify_address(owner).call().then(function (addr) {
       console.log("Address is "+addr);
+      window.statusComponent.setStatus('success', 'Address verified.');
       $('#display').text("Address: " + addr);
     });
   }

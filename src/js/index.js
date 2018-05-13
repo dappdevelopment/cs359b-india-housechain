@@ -7,10 +7,10 @@ import { persistStore, persistReducer, autoRehydrate } from 'redux-persist'
 
 import '../css/index.css'
 
-import App from './app.js'
-import Store from './store.js'
-import Login from './login.js'
-import House from './house.js'
+import App from './app'
+import Store from './store'
+import Login from './login'
+import House from './house'
 
 const Root = () => (
   <Router>

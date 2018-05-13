@@ -2,7 +2,10 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: "./src/js/index.js",
+  entry: [
+    "./src/js/index.js", 
+    "./src/js/status.js"
+  ],
 
   output: {
       filename: "build.js",
