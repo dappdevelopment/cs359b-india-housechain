@@ -77,8 +77,6 @@ class App extends React.Component {
         <header className="App-header">
           <h1>Welcome to India HouseChain</h1>
           <h2 id="display"></h2>
-          <img id="loader" src="https://loading.io/spinners/pacman/lg.eat-bean-pie-loading-gif.gif"></img>
-
         </header>
         <br />
         <button>

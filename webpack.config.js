@@ -4,7 +4,8 @@ const dotenv = require('dotenv-webpack');
 module.exports = {
   entry: [
     "./src/js/index.js", 
-    "./src/js/status.js"
+    "./src/js/status.js",
+    "./src/js/navbar.js",
   ],
 
   output: {
@@ -48,7 +49,7 @@ module.exports = {
              ecma: 6,
              mangle: false,
              output: {
-               beautify: true
+               beautify: process.env.dev
              }
            },
            sourceMap: true,

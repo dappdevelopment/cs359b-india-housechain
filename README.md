@@ -20,6 +20,10 @@ npm install --save-dev lite-server
 npm install -D react react-dom react-redux redux redux-persist react-router-dom uport-connect
 npm install -D babel-core babel-loader babel-preset-react babel-preset-env css-loader style-loader json-loader web3
 ```
+Or simply,
+```
+npm install
+```
 
 ### uPort
 
