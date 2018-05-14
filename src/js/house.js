@@ -17,13 +17,13 @@ class House extends Component {
     Contract().then(this.setContract).catch(console.error);
   }
 
-  addAddress (addr) {
+  addAddress (addr, name, email, phone) {
     console.log("Adding an address of "+addr+" for userAccount "+this.props.userAccount)
     window.statusComponent.setStatus('warning', 'Adding address...');
-    this.contract.methods.add_address(this.props.userAccount, addr)
+    this.contract.methods.add_address(name, addr, email, phone)
     .send({from: this.props.userAccount})
-    .then(function (name) {
-      console.log("Address is "+name);
+    .then(function (success) {
+      console.log("Success is "+success);
       window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
     })
     .catch(function () {
@@ -31,19 +31,30 @@ class House extends Component {
     });
   }
 
-  verifyAddress (owner) {
-    console.log("Reading an address for userAccount "+owner)
+  verifyAddress (addr) {
+    console.log("Verifying address of "+addr);
     console.log(window.status)
     window.statusComponent.setStatus('warning', 'Verifying address...');
-    this.contract.methods.verify_address(owner).call().then(function (addr) {
-      console.log("Address is "+addr);
-      window.statusComponent.setStatus('success', 'Address verified.');
-      $('#display').text("Address: " + addr);
+    this.contract.methods.verify_address(addr).call().then(function (ret) {
+      var found = ret[0]
+      var owner = ret[1];
+      var email = ret[2];
+      var phone = ret[3];
+      if (!found) {
+        console.log("No entry exists for this address");
+        $('#display').text("Address not registered");
+      }
+      else {
+        console.log("Owner is "+owner+", email is "+email+", phone is "+phone);
+        window.statusComponent.setStatus('success', 'Address verified.');
+        $('#display').text("Owner: " + owner);
+      }
     })
     .catch(function () {
       window.statusComponent.setStatus('danger', "Could not verify your address. Check metamask.");
     });
   }
+
 
   setContract(contract) {
     this.contract = contract;
@@ -59,9 +70,17 @@ class House extends Component {
          type="text"></input>
         </div>
         <AutoComplete/>
-        <button onClick= { (e) => this.addAddress(this.refs.enterAddressTextBox.value) } >Add Address</button>
+        <input id="autocomplete" ref="enterNameTextBox" placeholder="Enter your name"
+         type="text"></input>
+        <input id="autocomplete" ref="enterPhoneTextBox" placeholder="Enter your phone #"
+         type="text"></input>
+        <input id="autocomplete" ref="enterEmailTextBox" placeholder="Enter your email"
+         type="text"></input>
+        <button onClick= { (e) => this.addAddress(this.refs.enterAddressTextBox.value,
+          this.refs.enterNameTextBox.value, this.refs.enterEmailTextBox.value,
+          this.refs.enterPhoneTextBox.value) } >Add Address</button>
         <label for="verify-address" class="col-lg-2 control-label">Verify Address</label>
-        <input ref="verifyAddressTextBox" type="text"></input>     
+        <input ref="verifyAddressTextBox" type="text"></input>
         <button onClick= { (e) => this.verifyAddress(this.refs.verifyAddressTextBox.value) } >Verify Address</button>
         <h2 id="display"></h2>
       </div>
