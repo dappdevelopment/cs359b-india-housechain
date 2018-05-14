@@ -82,6 +82,9 @@ class App extends React.Component {
         <button>
           <Link to={process.env.DAPP_URL + "/login"}>Login</Link>
         </button>
+        <button>
+          <Link to={process.env.DAPP_URL + "/house"}>Search</Link>
+        </button>
       </div>
     )
   }
