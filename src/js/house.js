@@ -42,6 +42,7 @@ class House extends Component {
       var phone = ret[3];
       if (!found) {
         console.log("No entry exists for this address");
+        window.statusComponent.setStatus('danger', "Could not verify your address. Check metamask.");
         $('#display').text("Address not registered");
       }
       else {
@@ -49,9 +50,6 @@ class House extends Component {
         window.statusComponent.setStatus('success', 'Address verified.');
         $('#display').text("Owner: " + owner);
       }
-    })
-    .catch(function () {
-      window.statusComponent.setStatus('danger', "Could not verify your address. Check metamask.");
     });
   }
 
