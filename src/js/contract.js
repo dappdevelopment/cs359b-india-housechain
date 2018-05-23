@@ -1,25 +1,53 @@
-export default () => {
+// THE COMMENTED OUT SECTION IS FOR VERSION USING WEB3 AND METAMASK
 
-  if (typeof web3 == 'undefined') throw 'No web3 detected. Is Metamask/Mist being used?';
-  web3 = new Web3(web3.currentProvider); // MetaMask injected Ethereum provider
-  console.log("Using web3 version: " + Web3.version);
-  
-  const contractDataPromise = $.getJSON('HouseChain.json');
-  const networkIdPromise = web3.eth.net.getId(); // resolves on the current network id
+// import { createContract, getAccount } from '../utils/web3';
 
-  return Promise.all([contractDataPromise, networkIdPromise])
-    .then(function initApp(results) {
-      const contractData = results[0]
-      const networkId = results[1]
-      
-      if (!(networkId in contractData.networks)) {
-        console.log(contractData.networks);
-        throw new Error("Contract not found in selected Ethereum network on MetaMask.");
-      }
+// class HouseChainContract {
+//   constructor(contract) {
+//     this.contract = contract;
+//   }
 
-      const contractAddress = contractData.networks[networkId].address;
-      const contract = new web3.eth.Contract(contractData.abi, contractAddress);
+//   addAddress = async (account, addr, name, email, phone) => {
+//     return this.contract.methods.add_address(name, addr, email, phone).send({from: account});
+//   }
 
-      return contract;
-    })
+//   verifyAddress = async (addr) => {
+//     return this.contract.methods.verify_address(addr).call();
+//   }
+// }
+
+
+// export default async function createHouseChainContract() {
+//   const contract = await createContract(houseChainMetadata);
+//   return new HouseChainContract(contract);
+// }
+
+import { web3 } from '../utils/uportSetup'
+const houseChainMetadata = require('../HouseChain.json');
+
+class HouseChainContract {
+  constructor(contract) {
+    this.contract = contract;
+  }
+
+  addAddress = (name, addr, email, phone, callback) => {
+    return this.contract.add_address.sendTransaction(name, addr, email, phone, callback);
+  }
+
+  verifyAddress = (addr, callback) => {
+    return this.contract.verify_address.call(addr, callback);
+  }
 }
+
+function HouseChainContractSetup () {
+  let houseChainABI = web3.eth.contract(houseChainMetadata.abi);
+  let address = houseChainMetadata.networks[5777].address;
+  let contract = houseChainABI.at('0x8fec59a9fe0c898435163763586aee0ee3900634');
+  // let contract = houseChainABI.at(address);
+  // return contract;
+  return new HouseChainContract(contract);
+}
+
+const houseChainContract = HouseChainContractSetup()
+
+export default houseChainContract

@@ -22,7 +22,10 @@ class Login extends Component {
     //     console.log({credentials});
     //     this.props.actions.connectUport(credentials);
     // });
-    uport.requestCredentials().then((credentials) => {
+    uport.requestCredentials(
+      { requested: ['name', 'phone', 'country', 'avatar'],
+        notifications: true
+      }).then((credentials) => {
       console.log(credentials);
       this.props.actions.connectUport(credentials)
       this.housePage();

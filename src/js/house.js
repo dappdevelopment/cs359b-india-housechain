@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as AppActions from './actions.js'
-import Contract from './contract.js'
+import * as AppActions from './actions'
+import houseChainContract from './contract'
 import AutoComplete from './maps/autocomplete'
+import checkAddressMNID from '../utils/checkAddressMNID'
+import waitForMined from '../utils/waitForMined'
 
 class House extends Component {
 
@@ -12,50 +14,97 @@ class House extends Component {
     console.log(this.props);
     this.addAddress = this.addAddress.bind(this);
     this.verifyAddress = this.verifyAddress.bind(this);
-    this.setContract = this.setContract.bind(this);
-
-    Contract().then(this.setContract).catch(console.error);
+    // this.setContract = this.setContract.bind(this);
+    
+    this.contract = houseChainContract;
+    this.state = {};
+    console.log(this.contract);
   }
 
   addAddress (addr, name, email, phone) {
-    console.log("Adding an address of "+addr+" for userAccount "+this.props.userAccount)
+    const userAccount = checkAddressMNID(this.props.uport.address)
+
+    console.log(web3.eth.defaultAccount);
+    console.log("Adding an address of "+addr+" for userAccount "+userAccount)
     window.statusComponent.setStatus('warning', 'Adding address...');
-    this.contract.methods.add_address(name, addr, email, phone)
-    .send({from: this.props.userAccount})
-    .then(function (success) {
-      console.log("Success is "+success);
-      window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
-    })
-    .catch(function () {
-      window.statusComponent.setStatus('danger', "Could not register your address. Check metamask.");
+    // try {
+    //   // const success = await this.contract.addAddress(
+    //   //   userAccount,
+    //   //   addr,
+    //   //   name,
+    //   //   email,
+    //   //   phone
+    //   // );
+
+    //   window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
+    // } catch (error) {
+    //   console.log(error);
+    //   window.statusComponent.setStatus('danger', "Could not register your address. Check metamask.");
+    // };
+    // this.contract.add_address(addr, name, email, phone, (error, txHash) => {
+    //   console.log('updateShares')
+    //   if (error) { 
+    //     console.log(error);
+    //   }
+    //   waitForMined(addr, txHash, { blockNumber: null },
+    //     () => {
+    //       window.statusComponent.setStatus('danger', "Could not register your address. Check metamask.");
+    //     },
+    //     (resp) => {
+    //       console.log(resp);
+    //       window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
+    //     }
+    //   )
+    // })
+
+    // this.contract.add_address(addr, name, email, phone, (error, resp) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log(resp);
+    //   }
+    // })
+
+    this.contract.addAddress(name, addr, email, phone, (error, txHash) => {
+      if (error) { 
+        throw error;
+      }
+      waitForMined(txHash, { blockNumber: null },
+        () => {
+          window.statusComponent.setStatus('warning', "Mining...Adding your address on the blockchain");
+        },
+        () => {
+          window.statusComponent.setStatus('success', "Address at " + addr + " was registered.");
+        }
+      )
     });
   }
 
   verifyAddress (addr) {
+    const userAccount = checkAddressMNID(this.props.uport.address);
     console.log("Verifying address of "+addr);
-    console.log(window.status)
     window.statusComponent.setStatus('warning', 'Verifying address...');
-    this.contract.methods.verify_address(addr).call().then(function (ret) {
-      var found = ret[0]
-      var owner = ret[1];
-      var email = ret[2];
-      var phone = ret[3];
-      if (!found) {
-        console.log("No entry exists for this address");
-        window.statusComponent.setStatus('danger', "Could not verify your address. Check metamask.");
-        $('#display').text("Address not registered");
-      }
-      else {
-        console.log("Owner is "+owner+", email is "+email+", phone is "+phone);
-        window.statusComponent.setStatus('success', 'Address verified.');
-        $('#display').text("Owner: " + owner);
-      }
-    });
-  }
 
-
-  setContract(contract) {
-    this.contract = contract;
+    this.contract.verifyAddress(addr, (error, resp) => {
+      if (error) {
+        throw error;
+      } else {
+        const found = resp[0];
+        const owner = resp[1];
+        const email = resp[2];
+        const phone = resp[3];
+        if (!found) {
+          console.log("No entry exists for this address");
+          window.statusComponent.setStatus('danger', "No entry exists for this address.");
+          $('#display').text("Address not registered");
+        }
+        else {
+          console.log("Owner is "+owner+", email is "+email+", phone is "+phone);
+          window.statusComponent.setStatus('success', 'Address verified.');
+          $('#display').text("Owner: " + owner);
+        }
+      }
+    })
   }
 
   render () {

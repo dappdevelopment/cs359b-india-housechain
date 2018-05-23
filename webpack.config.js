@@ -3,6 +3,7 @@ const dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: [
+    "babel-polyfill",
     "./src/js/index.js", 
     "./src/js/status.js",
     "./src/js/navbar.js",
@@ -49,7 +50,7 @@ module.exports = {
              ecma: 6,
              mangle: false,
              output: {
-               beautify: process.env.DEV
+               beautify: true
              }
            },
            sourceMap: true,
