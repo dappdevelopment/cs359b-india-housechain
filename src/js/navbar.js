@@ -19,10 +19,7 @@ class NavBar extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem eventKey={1} href={process.env.DAPP_URL + "/login"}>
-              Login
-            </NavItem>
-            <NavItem eventKey={2} href={process.env.DAPP_URL + "/house"} >
+            <NavItem eventKey={2} href={process.env.DAPP_URL + "/search"} >
               Search
             </NavItem>
           </Nav>

@@ -10,14 +10,14 @@ import '../css/index.css'
 import App from './app'
 import Store from './store'
 import Login from './login'
-import House from './house'
+import Search from './search'
 
 const Root = () => (
   <Router>
     <div>
       <Route exact path={process.env.DAPP_URL + "/"} component={App} />
       <Route path={process.env.DAPP_URL + "/login"} component={Login} />
-      <Route path={process.env.DAPP_URL + "/house"} component={House} />
+      <Route path={process.env.DAPP_URL + "/search"} component={Search} />
     </div>
   </Router>
 );

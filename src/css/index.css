@@ -18,6 +18,12 @@ input {
   Padding:10px;
   width: 50%;
   margin-bottom: 1em;
+  font-weight: normal;
+}
+
+textarea {
+  font-weight: normal;
+  width: 50%;
 }
 
 button {

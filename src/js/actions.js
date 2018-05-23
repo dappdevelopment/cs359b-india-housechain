@@ -12,9 +12,9 @@ export const getUserAccount = (text) => {
   }
 }
 
-export const getContract = (data) => {
+export const isLoggedIn = (data) => {
   return {
-    type: 'CONTRACT',
+    type: 'LOGGED_IN',
     data
   }
 }
