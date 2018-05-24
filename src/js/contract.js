@@ -41,7 +41,10 @@ class HouseChainContract {
 
 function HouseChainContractSetup () {
   let houseChainABI = web3.eth.contract(houseChainMetadata.abi);
+  // hardcoded to 5777 which is the network id of my local contract
+  // change to 4 when it is on rinkeby
   let address = houseChainMetadata.networks[5777].address;
+  // need a contract that was deployed in rinkeby
   let contract = houseChainABI.at('0x8fec59a9fe0c898435163763586aee0ee3900634');
   // let contract = houseChainABI.at(address);
   // return contract;

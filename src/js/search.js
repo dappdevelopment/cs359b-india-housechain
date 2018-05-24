@@ -10,14 +10,21 @@ import waitForMined from '../utils/waitForMined'
 
 import House from './house'
 import Register from './register'
+import { uport } from '../utils/uportSetup'
 
 class Search extends Component {
 
   constructor (props) {
     super(props);
+    console.log('search');
     console.log(this.props);
+    // pushToken and publicEnKey disappears when page refreshes. Manually set it from props.
+    uport.pushToken = this.props.uport.pushToken;
+    uport.publicEncKey = this.props.uport.publicEncKey;
+    console.log(uport);
+
     this.verifyAddress = this.verifyAddress.bind(this);
-    
+
     this.contract = houseChainContract;
     this.state = {};
     console.log(this.contract);
