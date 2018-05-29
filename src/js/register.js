@@ -8,17 +8,49 @@ import AutoComplete from './maps/autocomplete'
 import checkAddressMNID from '../utils/checkAddressMNID'
 import waitForMined from '../utils/waitForMined'
 
+import S3FileUpload from 'react-s3';
+import { uploadFile } from 'react-s3';
+import firebase from 'firebase';
+import FileUploader from 'react-firebase-file-uploader';
+
+
+
+
+// const config = {
+//     bucketName: 'indiahousechain',
+//     region: 'ap-south-1',
+//     accessKeyId: 'AKIAJPKHODFSA4KCD7EA',
+//     secretAccessKey: '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',
+// }
+  
+const config = {
+  apiKey: "AIzaSyBHmXtUdln-QFoAlTYoCAX8mRhfls-SbzM",
+  authDomain: "india-housechain.firebaseapp.com",
+  //databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+  storageBucket: "gs://india-housechain.appspot.com",
+};
+
+
 class Register extends Component {
 
   constructor (props) {
     super(props);
     console.log(this.props);
+
+
+    firebase.initializeApp(config);
+
+    
     this.addAddress = this.addAddress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);   
     this.contract = houseChainContract;
-    this.state = {};
+    this.state = {
+      selectedFile: null
+    };
     console.log(this.contract);
   }
+
+
 
   addAddress (addr, name, email, phone) {
     const userAccount = checkAddressMNID(this.props.uport.address)
@@ -44,6 +76,13 @@ class Register extends Component {
     });
   }
 
+  fileSelectedHandler = event => {
+    //console.log(event.target.files[0]);
+    this.setState({
+      selectedFile : event.target.files[0]
+    });
+  }
+
   handleSubmit (event) {
     event.preventDefault();
     console.log(this.refs);
@@ -53,6 +92,9 @@ class Register extends Component {
             this.refs.enterEmailTextBox.value,
             this.refs.enterPhoneTextBox.value
     );
+    // uploadFile(this.state.selectedFile, config)
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err));
   }
 
   // handleInputChange(event) {
@@ -101,7 +143,22 @@ class Register extends Component {
               type="text"
               placeholder="enter proof of address"/>
           </label>
+
+          <FileUploader
+            accept=".pdf"
+            name="avatar"
+            filename={this.props.address+"_proof_of_ownership"}
+            storageRef={firebase.storage().ref()}
+            onUploadStart={this.handleUploadStart}
+            onUploadError={this.handleUploadError}
+            onUploadSuccess={this.handleUploadSuccess}
+            onProgress={this.handleProgress}
+          />
+
           <input type="submit" value="Register" />
+
+
+
         </form>
 
         <iframe
