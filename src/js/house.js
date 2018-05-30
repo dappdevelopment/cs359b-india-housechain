@@ -30,8 +30,12 @@ class House extends Component {
           width="600"
           height="450"
           frameborder="0" style={{border:"0"}}
-          src={"https://www.google.com/maps/embed/v1/place?key=AIzaSyAtTxv3TgcEDW-tS_WzTbuwHr7PNCDme2A&q=" + 
-          this.props.address} allowfullscreen>
+          src={
+            "https://www.google.com/maps/embed/v1/place?key=" +
+             process.env.MAPS_APIKEY +
+             "&q=" +
+             this.props.address
+          } allowfullscreen>
         </iframe>
       </div>
     )

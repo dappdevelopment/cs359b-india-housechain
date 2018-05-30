@@ -8,23 +8,57 @@ import AutoComplete from './maps/autocomplete'
 import checkAddressMNID from '../utils/checkAddressMNID'
 import waitForMined from '../utils/waitForMined'
 
-import S3FileUpload from 'react-s3';
-import { uploadFile } from 'react-s3';
 import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 
 
-
-
-// const config = {
-//     bucketName: 'indiahousechain',
-//     region: 'ap-south-1',
-//     accessKeyId: 'AKIAJPKHODFSA4KCD7EA',
-//     secretAccessKey: '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',
-// }
+const styles = {
+  progressWrapper: {
+    height: '10px',
+    marginTop: '10px',
+    width: '400px',
+    float:'left',
+    overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+    borderRadius: '4px',
+    WebkitBoxShadow: 'inset 0 1px 2px rgba(0,0,0,.1)',
+    boxShadow: 'inset 0 1px 2px rgba(0,0,0,.1)'
+  },
+  progressBar: {
+    float: 'left',
+    width: '0',
+    height: '100%',
+    fontSize: '12px',
+    lineHeight: '20px',
+    color: '#fff',
+    textAlign: 'center',
+    backgroundColor: '#5cb85c',
+    WebkitBoxShadow: 'inset 0 -1px 0 rgba(0,0,0,.15)',
+    boxShadow: 'inset 0 -1px 0 rgba(0,0,0,.15)',
+    WebkitTransition: 'width .6s ease',
+    Otransition: 'width .6s ease',
+    transition: 'width .6s ease'
+  },
+  cancelButton: {
+    marginTop: '5px',
+    WebkitAppearance: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    background: '0 0',
+    border: 0,
+    float: 'left',
+    fontSize: '21px',
+    fontWeight: 700,
+    lineHeight: 1,
+    color: '#000',
+    textShadow: '0 1px 0 #fff',
+    filter: 'alpha(opacity=20)',
+    opacity: '.2'
+  }
+}
   
 const config = {
-  apiKey: "AIzaSyBHmXtUdln-QFoAlTYoCAX8mRhfls-SbzM",
+  apiKey: process.env.FIREBASE_APIKEY,
   authDomain: "india-housechain.firebaseapp.com",
   //databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
   storageBucket: "gs://india-housechain.appspot.com",
@@ -43,13 +77,65 @@ class Register extends Component {
     
     this.addAddress = this.addAddress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);   
+    this.handleChangeUsername = this.handleChangeUsername.bind(this);
+    this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangePhone = this.handleChangePhone.bind(this);
+    this.handleUploadStart = this.handleUploadStart.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+    this.handleUploadError = this.handleUploadError.bind(this);
+    this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
+
     this.contract = houseChainContract;
+
     this.state = {
-      selectedFile: null
+      username: this.props.uport.name,
+      email: this.props.uport.email,
+      phone: this.props.uport.phone,
+      filename: '',
+      isUploading: false,
+      progress: 0,
+      fileURL: ''
     };
+
+
     console.log(this.contract);
   }
 
+  handleChangeUsername = (event) => this.setState({username: event.target.value});
+
+  handleChangeEmail = (event) => this.setState({email: event.target.value});
+
+  handleChangePhone = (event) => this.setState({phone: event.target.value});
+
+  handleUploadStart = () => this.setState({isUploading: true, progress: 0});
+
+  handleUploadError = (error) => {
+    this.setState({message: "Error uploading file"});
+    console.error(error);
+  }
+
+  handleUploadSuccess = (filename) => {
+    this.setState({filename: filename, progress: 100});
+    firebase.storage().ref().child(filename).getDownloadURL().then(url => this.setState({fileURL: url}));
+  };
+
+
+  handleProgress(progress) {
+    if (progress > -1 ) {
+      let barStyle = Object.assign({}, styles.progressBar);
+      barStyle.width = progress + '%';
+
+      let message = (<span>{barStyle.width}</span>);
+
+      if (progress === 100){
+        message = (<span >Successfully Uploaded</span>);
+      }
+      this.setState({
+        barStyle: barStyle,
+        message: message
+      });
+    }
+  }
 
 
   addAddress (addr, name, email, phone) {
@@ -76,12 +162,6 @@ class Register extends Component {
     });
   }
 
-  fileSelectedHandler = event => {
-    //console.log(event.target.files[0]);
-    this.setState({
-      selectedFile : event.target.files[0]
-    });
-  }
 
   handleSubmit (event) {
     event.preventDefault();
@@ -92,20 +172,8 @@ class Register extends Component {
             this.refs.enterEmailTextBox.value,
             this.refs.enterPhoneTextBox.value
     );
-    // uploadFile(this.state.selectedFile, config)
-    // .then(data => console.log(data))
-    // .catch(err => console.log(err));
   }
 
-  // handleInputChange(event) {
-  //   const target = event.target;
-  //   const value = target.type === 'checkbox' ? target.checked : target.value;
-  //   const name = target.name;
-
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
 
   render () {
     return (
@@ -117,7 +185,8 @@ class Register extends Component {
             <input
               ref="enterNameTextBox"
               type="text"
-              value={this.props.uport.name}/>
+              value={this.state.username}
+              onChange={this.handleChangeUsername}/>
           </label>
           <br />
           <label>
@@ -125,7 +194,8 @@ class Register extends Component {
             <input
               ref="enterEmailTextBox"
               type="text"
-              value={this.props.uport.email}/>
+              value={this.state.email}
+              onChange={this.handleChangeEmail}/>
           </label>
           <br />
           <label>
@@ -133,31 +203,41 @@ class Register extends Component {
             <input
               ref="enterPhoneTextBox"
               type="text"
-              value={this.props.uport.phone}/>
+              value={this.state.phone}
+              onChange={this.handleChangePhone}/>
           </label>
           <br />
           <label>
-            Additional Info:
-            <textarea
-              ref="enterTextArea"
-              type="text"
-              placeholder="enter proof of address"/>
+            Upload Proof Of Address:
+
+            <FileUploader
+              accept=".pdf"
+              name="avatar"
+              filename={this.props.address+"_proof_of_ownership"}
+              storageRef={firebase.storage().ref()}
+              onUploadStart={this.handleUploadStart}
+              onUploadError={this.handleUploadError}
+              onUploadSuccess={this.handleUploadSuccess}
+              onProgress={this.handleProgress}
+            />
+
+            {this.state.isUploading &&
+              <div>
+                <div style={styles.progressWrapper}>
+                  <div style={this.state.barStyle}></div>
+                </div>
+                <div style={{'clear':'left'}}>
+                  {this.state.message}
+                </div>
+              </div>
+            }
+
+            {this.state.fileURL &&
+              <a href={this.state.fileURL} target="_blank">{this.state.filename}</a>
+            }
           </label>
 
-          <FileUploader
-            accept=".pdf"
-            name="avatar"
-            filename={this.props.address+"_proof_of_ownership"}
-            storageRef={firebase.storage().ref()}
-            onUploadStart={this.handleUploadStart}
-            onUploadError={this.handleUploadError}
-            onUploadSuccess={this.handleUploadSuccess}
-            onProgress={this.handleProgress}
-          />
-
           <input type="submit" value="Register" />
-
-
 
         </form>
 
@@ -165,8 +245,12 @@ class Register extends Component {
           width="600"
           height="450"
           frameborder="0" style={{border:"0"}}
-          src={"https://www.google.com/maps/embed/v1/place?key=AIzaSyAtTxv3TgcEDW-tS_WzTbuwHr7PNCDme2A&q=" + 
-          this.props.address} allowfullscreen>
+          src={
+            "https://www.google.com/maps/embed/v1/place?key=" +
+             process.env.MAPS_APIKEY +
+             "&q=" +
+             this.props.address
+          } allowfullscreen>
         </iframe>
       </div>
     )
