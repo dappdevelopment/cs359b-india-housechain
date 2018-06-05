@@ -11,6 +11,7 @@ import App from './app'
 import Store from './store'
 import Search from './search'
 import AccountPage from './accountPage'
+import Contest from './contest'
 
 const Root = () => (
   <Router>
@@ -18,6 +19,7 @@ const Root = () => (
       <Route exact path={process.env.DAPP_URL + "/"} component={App} />
       <Route path={process.env.DAPP_URL + "/search"} component={Search} />
       <Route path={process.env.DAPP_URL + "/account"} component={AccountPage} />
+      <Route path={process.env.DAPP_URL + "/contest"} component={Contest} />
     </div>
   </Router>
 );

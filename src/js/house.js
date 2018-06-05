@@ -14,8 +14,10 @@ class House extends Component {
   }
 
   contest () {
-    alert('THIS IS MY HOME!')
+    // alert('THIS IS MY HOME!')
     console.log('I WANT TO CONTEST');
+    console.log(this.props)
+    this.props.history.push(process.env.DAPP_URL + "/contest");
   }
 
   render () {

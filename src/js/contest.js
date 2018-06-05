@@ -65,7 +65,7 @@ const config = {
 };
 
 
-class Register extends Component {
+class Contest extends Component {
 
   constructor (props) {
     super(props);
@@ -94,7 +94,8 @@ class Register extends Component {
       filename: '',
       isUploading: false,
       progress: 0,
-      fileURL: ''
+      fileURL: '',
+      submit: false,
     };
 
 
@@ -166,19 +167,16 @@ class Register extends Component {
   handleSubmit (event) {
     event.preventDefault();
     console.log(this.refs);
-    this.addAddress(
-            this.props.address,
-            this.refs.enterNameTextBox.value, 
-            this.refs.enterEmailTextBox.value,
-            this.refs.enterPhoneTextBox.value
-    );
+    window.statusComponent.setStatus('warning', "Submitting your dispute...");
+    setTimeout(function() { this.setState({submit: true}); }.bind(this), 2000);
+    window.statusComponent.setStatus('success', "An email has been sent to the Government of India.")
   }
 
 
   render () {
     return (
       <div>
-        <h4>Register your home</h4>
+        <h4>Contest Form</h4>
         <form onSubmit={ this.handleSubmit }>
           <label>
             Name:
@@ -205,6 +203,10 @@ class Register extends Component {
               type="text"
               value={this.state.phone}
               onChange={this.handleChangePhone}/>
+          </label>
+          <br />
+          <label>
+          <textarea placeholder="Explain why you are contesting"></textarea>
           </label>
           <br />
           <label>
@@ -237,21 +239,9 @@ class Register extends Component {
             }
           </label>
 
-          <input type="submit" value="Register" />
+          <input type="submit" value="Submit" />
 
         </form>
-
-        <iframe
-          width="600"
-          height="450"
-          frameborder="0" style={{border:"0"}}
-          src={
-            "https://www.google.com/maps/embed/v1/place?key=" +
-             process.env.MAPS_APIKEY +
-             "&q=" +
-             this.props.address
-          } allowfullscreen>
-        </iframe>
       </div>
     )
   }
@@ -267,4 +257,4 @@ const mapDispatchToProps = (dispatch) => {
   return { actions: bindActionCreators(AppActions, dispatch) }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register)
+export default connect(mapStateToProps, mapDispatchToProps)(Contest)

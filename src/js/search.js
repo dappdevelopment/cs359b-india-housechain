@@ -82,7 +82,7 @@ class Search extends Component {
           Search
         </button>
         { this.state.search ? 
-          (this.state.found ? <House {...this.state} /> : <Register {...this.state} />)
+          (this.state.found ? <House location={this.props.location} history={this.props.history} {...this.state} /> : <Register {...this.state} />)
           : null 
         }
       </div>

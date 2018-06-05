@@ -37,8 +37,9 @@ class App extends React.Component {
 
   render () {
     return (
-      <div className='App'>
-        <header className="App-header">
+      <div className='App' align='center'>
+      <div class='main-background'></div>
+        <header className="App-header" class='main-header'>
           <h1>Welcome to India HouseChain!</h1>
           <h4>A place to register and verify ownership of your home directly on the blockchain</h4>
         </header>
