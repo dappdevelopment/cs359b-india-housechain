@@ -24,6 +24,11 @@ function App(state = initialState, payload) {
         ...state,
         contract: payload.data
       }
+    case 'CURRENT_ADDRESS':
+      return {
+        ...state,
+        currentAddress: payload.text
+      }
     default:
       return state
   }

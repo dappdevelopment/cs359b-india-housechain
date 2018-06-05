@@ -18,3 +18,10 @@ export const isLoggedIn = (data) => {
     data
   }
 }
+
+export const addCurrentAddress = (text) => {
+  return {
+    type: 'CURRENT_ADDRESS',
+    text
+  }
+}

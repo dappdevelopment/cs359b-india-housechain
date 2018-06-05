@@ -31,6 +31,7 @@ class Search extends Component {
   }
 
   verifyAddress (addr) {
+    this.props.actions.addCurrentAddress(addr);
     const userAccount = checkAddressMNID(this.props.uport.address);
     console.log("Verifying address of "+addr);
     window.statusComponent.setStatus('warning', 'Checking if address has already been registered...');
@@ -82,7 +83,7 @@ class Search extends Component {
           Search
         </button>
         { this.state.search ? 
-          (this.state.found ? <House location={this.props.location} history={this.props.history} {...this.state} /> : <Register {...this.state} />)
+          (this.state.found ? <House history={this.props.history} {...this.state} /> : <Register {...this.state} />)
           : null 
         }
       </div>

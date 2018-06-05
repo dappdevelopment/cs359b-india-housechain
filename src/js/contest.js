@@ -70,7 +70,7 @@ class Contest extends Component {
   constructor (props) {
     super(props);
     console.log(this.props);
-
+    window.statusComponent.setState({show: false});
 
     firebase.initializeApp(config);
 
@@ -177,6 +177,7 @@ class Contest extends Component {
     return (
       <div>
         <h4>Contest Form</h4>
+        <p>Contesting for the address at <b>{this.props.currentAddress}</b></p>
         <form onSubmit={ this.handleSubmit }>
           <label>
             Name:
@@ -249,7 +250,8 @@ class Contest extends Component {
 
 const mapStateToProps = (state, props) => {
   return {  
-    uport: state.App.uport
+    uport: state.App.uport,
+    currentAddress: state.App.currentAddress,
   }
 }
 
