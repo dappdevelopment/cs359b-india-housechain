@@ -12,6 +12,15 @@ import House from './house'
 import Register from './register'
 import { uport } from '../utils/uportSetup'
 
+import firebase from 'firebase';
+
+const config = {
+  apiKey: process.env.FIREBASE_APIKEY,
+  authDomain: "india-housechain.firebaseapp.com",
+  //databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+  storageBucket: "gs://india-housechain.appspot.com",
+};
+
 class Search extends Component {
 
   constructor (props) {
@@ -22,6 +31,8 @@ class Search extends Component {
     uport.pushToken = this.props.uport.pushToken;
     uport.publicEncKey = this.props.uport.publicEncKey;
     console.log(uport);
+
+    firebase.initializeApp(config);
 
     this.verifyAddress = this.verifyAddress.bind(this);
 

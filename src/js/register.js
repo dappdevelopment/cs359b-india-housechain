@@ -57,23 +57,11 @@ const styles = {
   }
 }
   
-const config = {
-  apiKey: process.env.FIREBASE_APIKEY,
-  authDomain: "india-housechain.firebaseapp.com",
-  //databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-  storageBucket: "gs://india-housechain.appspot.com",
-};
-
-
 class Register extends Component {
 
   constructor (props) {
     super(props);
     console.log(this.props);
-
-
-    firebase.initializeApp(config);
-
     
     this.addAddress = this.addAddress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);   
